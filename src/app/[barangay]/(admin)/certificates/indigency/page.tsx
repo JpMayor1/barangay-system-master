@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../../../../../../public/logo.png";
 import daetLogo from "../../../../../../public/daet-logo.png";
 import footer from "../../../../../../public/footer.png";
-import dahon from "../../../../../../public/dahon.jpg";
+import dahon from "../../../../../../public/dahon.png";
 
 function Indigency() {
     return (
@@ -55,9 +55,9 @@ function Indigency() {
                             </h1>
                         </div>
 
-                        <div className="mt-5 px-14 font-cambria text-[16px]">
+                        <div className="mt-5 px-14 font-cambria text-[16px] z-20">
                             <p>TO WHOM IT MAY CONCERN:</p>
-                            <p className="mt-5">
+                            <p className="mt-5  z-20">
                                 This is to certify that{" "}
                                 <input
                                     type="text"
@@ -84,7 +84,7 @@ function Indigency() {
                                 />
                                 , Barangay Borabod Daet, Camarines Norte.
                             </p>
-                            <p className="mt-5">
+                            <p className="mt-5 z-20">
                                 Furthermost, it is here then to certify as per
                                 record of the Barangay thru Census that{" "}
                                 <input
@@ -94,7 +94,7 @@ function Indigency() {
                                 />{" "}
                                 belongs to the indigent family of this locality.
                             </p>
-                            <p className="mt-5">
+                            <p className="mt-5 z-20">
                                 Issued this{" "}
                                 <input
                                     type="text"
@@ -132,14 +132,14 @@ function Indigency() {
                             <p className="mt-5">Certified by:</p>
                         </div>
                         {/* footer */}
-                        <div className="w-full absolute left-0 bottom-8 z-10">
+                        <div className="w-full absolute left-0 bottom-8 z-20">
                             <Image
                                 src={footer}
                                 alt="Footer"
                                 className="h-full w-full"
                             />
                         </div>
-                        <div className="w-[121px] h-[554px] absolute right-1 bottom-8">
+                        <div className="w-[121px] h-[554px] absolute right-1 bottom-8 z-0">
                             <Image
                                 src={dahon}
                                 alt="dahon"
