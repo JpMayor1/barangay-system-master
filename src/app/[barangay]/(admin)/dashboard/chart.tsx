@@ -18,31 +18,32 @@ export default function DashboardChart({ data }: { data: Array<number> }) {
 
   const chartConfig = {
     type: "pie",
-    width: 280,
-    height: 280,
+    width: 400,
+    height: 400,
     series: data,
     options: {
       chart: {
         toolbar: {
-          show: false,
+          show: true,
         },
       },
       title: {
         show: "",
       },
       dataLabels: {
-        enabled: false,
+        enabled: true,
       },
+      labels: ["Residents", "Voters", "Non-voters", "PWD", "Officials"],
       colors: ["#81c784", "#ffb74d", "#ffa726", "#90caf9", "#5c6bc0"],
       legend: {
-        show: false,
+        show: true,
       },
     },
   };
 
   return (
     <>
-      <Card className="p-10">
+      <Card className="w-full">
         <CardHeader
           floated={false}
           shadow={false}
@@ -55,7 +56,7 @@ export default function DashboardChart({ data }: { data: Array<number> }) {
             </Typography>
           </div>
         </CardHeader>
-        <CardBody className="mt-4 grid place-items-center px-2">
+        <CardBody className="w-full mt-4 grid place-items-center px-2">
           <Chart {...chartConfig} />
         </CardBody>
       </Card>

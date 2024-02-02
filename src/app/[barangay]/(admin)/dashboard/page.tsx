@@ -100,8 +100,8 @@ async function DashboardPage({ params }: DashboardPageProps) {
           </div>
         </div>
       </div>
-      <div className="flex-auto flex flex-row flex-nowrap gap-x-3">
-        <div className="flex-auto">
+      <div className="flex-auto flex flex-row flex-wrap 2xl:flex-nowrap gap-x-3">
+        <div className="flex-auto order-2">
           <div className="w-full">
             <div className="text-sm mx-2">Recent Residents</div>
             <DataTable
@@ -114,7 +114,7 @@ async function DashboardPage({ params }: DashboardPageProps) {
               }}
             />
           </div>
-          <div className="w-full">
+          <div className="w-full order-3">
             <div className="text-sm mx-2 mt-10">Recent Logs</div>
             <DataTable
               endpoint="/"
@@ -127,8 +127,8 @@ async function DashboardPage({ params }: DashboardPageProps) {
             />
           </div>
         </div>
-        <div className="w-auto rounded-lg mt-10">
-          <DashboardChart data={[residents, voters, PWD, notVoters, officials]} />
+        <div className="w-full rounded-lg order-1 mb-10 2xl:w-auto 2xl:mb-0 2xl:mt-10 2xl:order-3">
+          <DashboardChart data={[residents, voters, notVoters, PWD, officials]} />
         </div>
       </div>
     </div>

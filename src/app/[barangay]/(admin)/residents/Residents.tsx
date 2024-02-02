@@ -11,7 +11,8 @@ import { useEffect, useState } from "react"
 import { useDebouncedValue } from "@mantine/hooks"
 
 type ResidentsType = {
-  data: Array<Data>
+  data: Array<Data>,
+  barangay: string
 }
 
 type Data = {
@@ -37,7 +38,7 @@ function Residents(props: ResidentsType) {
   useEffect(() => {
     console.log(debounced);
     if (debounced.length > 0) {
-      const filtered = data.filter((v) => {
+      const filtered = RESIDENTS.filter((v) => {
         if (v.publicID !== null && v.publicID.toUpperCase().includes(debounced.toUpperCase())) {
           return v;
         }
@@ -90,6 +91,7 @@ function Residents(props: ResidentsType) {
         </Button>
       </div>
       <DataTable
+        docs={props.barangay}
         endpoint="/api/person"
         head={["", "id", "firstname", "middlename", "lastname", "gender", "purok", "street"]}
         data={{

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from "next/image"
 import { FaImage } from "react-icons/fa6"
 import { useEffect, useState } from "react"
 import { Checkbox, IconButton, Input, Option, Select } from "@material-tailwind/react"
@@ -7,6 +8,7 @@ import { Checkbox, IconButton, Input, Option, Select } from "@material-tailwind/
 import { Resident } from "@/lib/types"
 
 type PersonFormType = {
+  img?: string
   init: Partial<Resident>;
   getFormdata?: (data: any) => void,
   getImage?: (image: File) => void
@@ -22,10 +24,10 @@ function getAge(birthday: Date) {
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
-function PersonForm({ getFormdata, children, getImage, init }: PersonFormType) {
+function PersonForm({ getFormdata, children, getImage, init, img }: PersonFormType) {
   const [form, setForm] = useState<Partial<Resident>>({})
   const [image, setImage] = useState<File | null>(null)
-  const [preview, setPreview] = useState<string | null>(null)
+  const [preview, setPreview] = useState<string | null>(img ? img : null)
 
   useEffect(() => {
     setTimeout(() => {
@@ -54,8 +56,6 @@ function PersonForm({ getFormdata, children, getImage, init }: PersonFormType) {
   }, [image])
 
   useEffect(() => {
-    console.log(form);
-
     if (getFormdata) {
       getFormdata(form)
     }
@@ -64,43 +64,42 @@ function PersonForm({ getFormdata, children, getImage, init }: PersonFormType) {
 
   return (
     <div className="w-full row items-start gap-x-2">
-      {/* <div className="w-full 2xl:w-1/4 p-5 shadow-sm rounded-lg border border-gray-100">
-        <div className="w-full flex flex-col center">
-          <div className="w-40 h-40 relative rounded-full p-1 border-2 bg-gray-100 border-gray-200">
-            {preview !== null ?
-              <img
-                src={preview}
-                alt="person_image"
-                className="w-full h-full object-cover rounded-full"
-              />
-              :
-              <></>
-            }
-            <div className="w-auto absolute -right-1 bottom-2">
-              <input
-                type="file"
-                id="person-image"
-                name="person-image"
-                className="hidden"
-                accept="image/png, image/gif, image/jpeg"
-                onChange={(ev) => {
-                  if (ev.target.files && ev.target.files.length !== 0) {
-                    setImage(ev.target.files[0]);
-                  }
-                }}
-              />
-              <IconButton className="rounded-full" >
-                <label htmlFor="person-image">
-                  <FaImage size={16} />
-                </label>
-              </IconButton>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
       <div className="flex-auto flex flex-col gap-y-2">
         <div className="w-full p-5 shadow-sm border rounded-lg bg-white border-gray-100">
+          {/* <div className="w-full flex flex-col center">
+            <div className="w-40 h-40 relative rounded-full p-1 border-2 bg-gray-100 border-gray-200">
+              {preview !== null ?
+                <Image
+                  width={160}
+                  height={160}
+                  src={preview}
+                  alt="person_image"
+                  className="w-full h-full object-cover rounded-full"
+                />
+                :
+                <></>
+              }
+              <div className="w-auto absolute -right-1 bottom-2">
+                <input
+                  type="file"
+                  id="person-image"
+                  name="person-image"
+                  className="hidden"
+                  accept="image/png, image/gif, image/jpeg"
+                  onChange={(ev) => {
+                    if (ev.target.files && ev.target.files.length !== 0) {
+                      setImage(ev.target.files[0]);
+                    }
+                  }}
+                />
+                <IconButton className="rounded-full" >
+                  <label htmlFor="person-image">
+                    <FaImage size={16} />
+                  </label>
+                </IconButton>
+              </div>
+            </div>
+          </div> */}
           <div className="w-full text-sm font-semibold mb-2 text-blue-gray-600">Basic Information</div>
           <div className="w-40">
             <Input

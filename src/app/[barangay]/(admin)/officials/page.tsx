@@ -1,4 +1,3 @@
-import { useState } from "react"
 import Officials from "./Officials"
 import { prisma } from "@/lib/prisma"
 import { FaHouseUser } from "react-icons/fa6"

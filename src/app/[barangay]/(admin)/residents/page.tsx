@@ -75,7 +75,7 @@ async function ResidentPage({ params }: RouteParams) {
           </div>
         </div>
       </div>
-      <Residents data={residents as any} />
+      <Residents data={residents as any} barangay={params.barangay} />
     </div>
   )
 }

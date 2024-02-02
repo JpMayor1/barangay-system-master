@@ -173,7 +173,6 @@ export async function GET (request: NextRequest) {
     const organizationID = request.nextUrl.searchParams.get('organization');
 
     if(residentID && organizationID) {
-      console.log(residentID, organizationID);
       const resident = await prisma.resident.findUnique({
         where: {
           id: residentID,
@@ -183,8 +182,6 @@ export async function GET (request: NextRequest) {
           official: true
         }
       })
-
-      console.log(resident);
 
       if(resident) {
         if(resident.publicID === null) {

@@ -2,13 +2,17 @@
 
 import { Resident } from "@/lib/types"
 import { Input, Select, Option, Button, Tooltip } from "@material-tailwind/react"
+import dayjs from "dayjs"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { BsFillPrinterFill } from "react-icons/bs"
-import { FaPen } from "react-icons/fa"
+import { FaPen } from "react-icons/fa6"
 
-type IDProps = {
-
+type RouteProps = {
+  params: {
+      barangay: string,
+      resident: string
+  }
 }
 
 // source: https://stackoverflow.com/questions/4060004/calculate-age-given-the-birth-date-in-the-format-yyyymmdd
@@ -20,10 +24,31 @@ function getAge(birthday: Date) {
 
 const row = "w-full row items-center gap-y-2 2xl:gap-x-2 2xl:gap-y-0 my-3";
 
-function ID(props: IDProps) {
+function ID({ params }: RouteProps) {
   const [form, setForm] = useState<Partial<any>>({})
 
   const [editMode, setEditMode] = useState(false)
+
+  useEffect(() => {
+    fetch(
+      '/api/person?'+ 
+      new URLSearchParams({ 
+          organization: params.barangay, 
+          resident: params.resident 
+      }),
+
+  ).then(async res => {
+      console.log(res.status);
+      const { purok, street, ...resident}: Resident = await res.json();
+
+      const date = dayjs(new Date()).format('MMMM/D/YYYY').split('/');
+      setForm({  
+        ...resident,
+        address: `PUROK ${purok} Brgy. Borabod, Daet, Camarines Norte`
+      })
+  })
+
+  }, [])
 
   return (
     <div className="w-full h-fit flex flex-col p-10 rounded-xl shadow-lg bg-white">
@@ -57,20 +82,20 @@ function ID(props: IDProps) {
           <div className="w-auto h-auto relative">
             <div className="absolute z-20">
               <div className="w-[220px] mt-[122px] ml-[170px]">
-                <div className="flex flex-row justify-between text-sm">
+                <div className="flex flex-row justify-between text-[12.5px] font-semibold">
                   <div>{form.lastname}</div>
                   <div>{form.firstname}</div>
                   <div className="mr-4">{form.middlename}</div>
                 </div>
-                <div className="flex mt-4 flex-row justify-between text-sm">
+                <div className="flex mt-5 flex-row justify-between text-[12.5px] font-semibold">
                   <div>{form.birthdate}</div>
                   <div className="mr-4">{form.civilStatus}</div>
                 </div>
-                <div className="flex mt-5 flex-row justify-between text-sm">
+                <div className="flex mt-5 flex-row justify-between text-[12.5px] font-semibold">
                   <div className="ml-4">{form.gender}</div>
                   <div className="ml-10">{form.valid}</div>
                 </div>
-                <div className="w-full text-sm mt-4">{form.address}</div>
+                <div className="w-full text-[12.5px] font-semibold mt-4">{form.address}</div>
               </div>
             </div>
             <Image
@@ -83,12 +108,12 @@ function ID(props: IDProps) {
               <div className="absolute z-20">
                 <div className="w-[280px] mt-[38px] ml-[70px]">
                   <div className="flex flex-row justify-between">
-                    <div className="text-sm">{form.height}</div>
-                    <div className="text-sm">{form.weight}</div>
+                    <div className="text-[12.5px] font-semibold">{form.height}</div>
+                    <div className="text-[12.5px] font-semibold">{form.weight}</div>
                   </div>
-                  <div className="w-full text-sm mt-2">{form.tin}</div>
-                  <div className="w-full text-sm mt-2">{form.sss}</div>
-                  <div className="w-full mt-[60px] ml-24 text-sm">
+                  <div className="w-full text-[12.5px] font-semibold mt-2">{form.tin}</div>
+                  <div className="w-full text-[12.5px] font-semibold mt-2">{form.sss}</div>
+                  <div className="w-full mt-[60px] ml-24 text-[12.5px] font-semibold">
                     <div>{form.emergencyPerson}</div>
                     <div>{form.emergencyContact}</div>
                     <div className="ml-2">{form.emergencyAddress}</div>
@@ -186,6 +211,7 @@ function ID(props: IDProps) {
                   required
                   type="date"
                   label="Valid Until"
+                  value={new Date().toString()}
                   onChange={(ev) => setForm((prev) => ({ ...prev, valid: ev.target.value }))}
                 />
               </div>
@@ -196,6 +222,7 @@ function ID(props: IDProps) {
                 required
                 type="text"
                 label="Address"
+                value={form.address}
                 onChange={(ev) => setForm((prev) => ({ ...prev, address: ev.target.value }))}
               />
             </div>
@@ -208,6 +235,7 @@ function ID(props: IDProps) {
                   required
                   type="text"
                   label="Height"
+                  value={form.height}
                   onChange={(ev) => setForm((prev) => ({ ...prev, height: ev.target.value }))}
                 />
               </div>
@@ -216,6 +244,7 @@ function ID(props: IDProps) {
                   required
                   type="text"
                   label="Weight"
+                  value={form.width}
                   onChange={(ev) => setForm((prev) => ({ ...prev, weight: ev.target.value }))}
                 />
               </div>
@@ -226,6 +255,7 @@ function ID(props: IDProps) {
                   required
                   type="text"
                   label="TIN NO."
+                  value={form.tin}
                   onChange={(ev) => setForm((prev) => ({ ...prev, tin: ev.target.value }))}
                 />
               </div>
@@ -234,6 +264,7 @@ function ID(props: IDProps) {
                   required
                   type="text"
                   label="SSS NO."
+                  value={form.sss}
                   onChange={(ev) => setForm((prev) => ({ ...prev, sss: ev.target.value }))}
                 />
               </div>
@@ -244,6 +275,7 @@ function ID(props: IDProps) {
                   required
                   type="text"
                   label="Notify Person's Name"
+                  value={form.emergencyPerson}
                   onChange={(ev) => setForm((prev) => ({ ...prev, emergencyPerson: ev.target.value }))}
                 />
               </div>
@@ -252,6 +284,7 @@ function ID(props: IDProps) {
                   required
                   type="text"
                   label="Person's Contact"
+                  value={form.emergencyContact}
                   onChange={(ev) => setForm((prev) => ({ ...prev, emergencyContact: ev.target.value }))}
                 />
               </div>
@@ -261,6 +294,7 @@ function ID(props: IDProps) {
                 required
                 type="text"
                 label="Address"
+                value={form.emergencyAddress}
                 onChange={(ev) => setForm((prev) => ({ ...prev, emergencyAddress: ev.target.value }))}
               />
             </div>

@@ -21,6 +21,7 @@ function ResidentForm({ params }: ResidentProps) {
   const isCreate = params.resident === 'create';
 
   const [loadingform, setLoadingForm] = useState<boolean>(false);
+  const [image, setImage] = useState<File | null>(null)
   const [form, setForm] = useState<Partial<Resident>>({ gender: "MALE", PWD: false, voter: true, publicID: 'N/A' });
 
   useEffect(() => {
@@ -61,7 +62,20 @@ function ResidentForm({ params }: ResidentProps) {
       });
 
       if (res.status === 201) {
-        const resident = await res.json();
+        const resident: Resident = await res.json();
+
+        if (image !== null) {
+          const formdata = new FormData();
+          formdata.set('owner', resident.id);
+          formdata.set('avatar', image);
+
+          const res = await fetch('/api/images', {
+            method: 'POST',
+            body: formdata
+          });
+        }
+
+
         setStatus({ state: true, message: '[PersonAPI]: Successfully added a new resident' });
       }
       else {
@@ -84,7 +98,19 @@ function ResidentForm({ params }: ResidentProps) {
 
       if (res.status === 201) {
         const resident = await res.json();
-        setStatus({ state: true, message: '[PersonAPI]: Successfully added a new resident' });
+        
+        if (image !== null) {
+          const formdata = new FormData();
+          formdata.set('owner', resident.id);
+          formdata.set('avatar', image);
+
+          const res = await fetch('/api/images', {
+            method: 'POST',
+            body: formdata
+          });
+        }
+
+        setStatus({ state: true, message: '[PersonAPI]: Successfully updated resident' });
       }
       else {
         setStatus({ state: false, message: '[PersonAPI]: Something went wrong with your request' });
@@ -107,7 +133,10 @@ function ResidentForm({ params }: ResidentProps) {
         <></>
         :
         <>
-          <PersonForm getFormdata={(data) => setForm(data)} init={form} />
+          <PersonForm getFormdata={(data) => setForm(data)} init={form} 
+          getImage={(img) => {
+            setImage(img)
+          }} />
           <div className="w-full row justify-end my-5">
             <Button onClick={() => Submit()}>
               <span>Submit</span>

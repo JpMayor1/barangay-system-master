@@ -1,20 +1,56 @@
 "use client";
 
+import { Resident } from "@/lib/types";
 import { Button, Input, Tooltip } from "@material-tailwind/react";
 import dayjs from "dayjs";
 import { renderAsync } from "docx-preview";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import logo from "../../../../../../public/logo.png";
-import daetLogo from "../../../../../../public/daet-logo.png";
-import footer from "../../../../../../public/footer.png";
-import dahon from "../../../../../../public/dahon.png";
 import { BsFillPrinterFill } from "react-icons/bs";
 
-function Business() {
+type RouteProps = {
+    params: {
+        barangay: string,
+        resident: string
+    }
+}
+
+function Business({ params }: RouteProps) {
+    const date = dayjs(new Date()).format('MMMM/D/YYYY').split('/')
+    const [form, setForm] = useState<Partial<{ name: string, address: string, business: string, purok: string, day: string, month: string, year: string }>>({
+        day: date[1],
+        month: date[0],
+        year: date[2]
+    })
+
+    useEffect(() => {
+        fetch(
+            '/api/person?'+ 
+            new URLSearchParams({ 
+                organization: params.barangay, 
+                resident: params.resident 
+            }),
+
+        ).then(async res => {
+            console.log(res.status);
+            const resident: Resident = await res.json();
+
+            const date = dayjs(new Date()).format('MMMM/D/YYYY').split('/');
+            setForm({
+                name: `${resident.firstname} ${resident.middlename} ${resident.lastname}`,
+                address: resident.street,
+                purok: resident.purok,
+                day: date[1],
+                month: date[0],
+                year: date[2]
+            })
+        })
+
+    }, [])
+
     return (
         <div className="w-full h-fit flex justify-center items-center">
-            <div className="w-auto fixed bottom-10 right-20">
+                        <div className="w-auto fixed bottom-10 right-20">
                 <Tooltip content='Print'>
                 <Button className='rounded-full py-6' color="green"
                     onClick={() => { window.print() }}
@@ -28,7 +64,7 @@ function Business() {
                     <div className="w-full flex items-center justify-center gap-6 mt-12">
                         <div className="w-[100px] h-[100px]">
                             <Image
-                                src={logo}
+                                src={require('/public/logo.png')}
                                 alt="Logo"
                                 className="h-full w-full"
                             />
@@ -45,7 +81,7 @@ function Business() {
 
                         <div className="w-[100px] h-[100px]">
                             <Image
-                                src={daetLogo}
+                                src={require('/public/daet-logo.png')}
                                 alt="Daet Logo"
                                 className="h-full w-full"
                             />
@@ -71,24 +107,32 @@ function Business() {
                             <input
                                 type="text"
                                 name="name"
+                                value={form.name}
+                                onChange={(ev) => setForm((prev) => ({ ...prev, name: ev.target.value }))}
                                 className="text-center border-b-2 border-black w-[150px] outline-none bg-transparent"
                             />
                             of legal age. A resident of
                             <input
                                 type="text"
                                 name="address"
+                                value={form.address}
+                                onChange={(ev) => setForm((prev) => ({ ...prev, address: ev.target.value }))}
                                 className="text-center border-b-2 border-black w-[100px] outline-none bg-transparent"
                             />
                             Daet, Camarines Norte, is the owner of
                             <input
                                 type="text"
                                 name="business"
+                                value={form.business}
+                                onChange={(ev) => setForm((prev) => ({ ...prev, business: ev.target.value }))}
                                 className="text-center border-b-2 border-black w-[150px] outline-none bg-transparent"
                             />
                             , located at Purok
                             <input
                                 type="text"
                                 name="purok"
+                                value={form.purok}
+                                onChange={(ev) => setForm((prev) => ({ ...prev, purok: ev.target.value }))}
                                 className="text-center border-b-2 border-black w-5 outline-none bg-transparent"
                             />
                             , Barangay Borabod Daet Camarines Norte.
@@ -114,18 +158,24 @@ function Business() {
                             <input
                                 type="text"
                                 name="day"
+                                value={form.day}
+                                onChange={(ev) => setForm((prev) => ({ ...prev, day: ev.target.value}))}
                                 className="text-center border-b-2 border-black w-5 outline-none"
                             />{" "}
                             day of{" "}
                             <input
                                 type="text"
                                 name="month"
+                                value={form.month}
+                                onChange={(ev) => setForm((prev) => ({ ...prev, month: ev.target.value}))}
                                 className="text-center border-b-2 border-black w-20 outline-none"
                             />
                             ,
                             <input
                                 type="text"
                                 name="year"
+                                value={form.year}
+                                onChange={(ev) => setForm((prev) => ({ ...prev, year: ev.target.value}))}
                                 className="text-center border-b-2 border-black w-20 outline-none"
                             />
                             .
@@ -135,14 +185,14 @@ function Business() {
                     {/* footer */}
                     <div className="w-full absolute left-0 bottom-1 z-10">
                         <Image
-                            src={footer}
+                            src={require('/public/footer.png')}
                             alt="Footer"
                             className="h-full w-full"
                         />
                     </div>
                     <div className="w-[121px] h-[554px] absolute right-1 bottom-1">
                         <Image
-                            src={dahon}
+                            src={require('/public/dahon.png')}
                             alt="dahon"
                             className="h-full w-full"
                         />

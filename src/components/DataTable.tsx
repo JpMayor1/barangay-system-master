@@ -1,15 +1,17 @@
 'use client'
 import { Alert, Button, Card, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Tooltip, Typography } from "@material-tailwind/react";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPen, FaTrash } from "react-icons/fa";
-import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleCheck, FaFile } from "react-icons/fa6";
 import { MdError } from "react-icons/md";
 
 type DataTableProps = {
   head: Array<string>,
   body?: Array<Object>,
   disable?: boolean,
+  docs?: string,
   data?: {
     keys: Array<string>,
     content: Array<Object>
@@ -23,6 +25,31 @@ function DataTable(props: DataTableProps) {
   const out = ['createdAt', 'updatedAt', 'marked'];
 
   const [data, setData] = useState(props.data ? props.data.content : [])
+
+  useEffect(() => {
+    if (props.data) {
+      setData(props.data.content)
+    }
+
+  }, [props.data])
+
+  const getImage = (id: string) => {
+    console.log(id)
+    let data = '';
+    fetch('/api/images?' + new URLSearchParams({ id, name: 'avatar' }) ,
+      { method: 'GET' }
+
+    ).then(async res => {
+      console.log(res.status)
+      if (res.status === 200) {
+        const image = await res.json();
+        console.log(image);
+        data = `data:${image.type};base64,${Buffer.from(image.content as any).toString('base64')}`;
+      }
+    })
+
+    return data;
+  }
 
   const [confirm, setConfirm] = useState<boolean>(false)
   const [id, setID] = useState<string | null>(null)
@@ -156,7 +183,14 @@ function DataTable(props: DataTableProps) {
                     {props.data!.keys.includes("0") ?
                       <td className="p-4"></td>
                       :
-                      <></>
+                      <td>
+                        {/* <Image
+                          width={60}
+                          height={60}
+                          alt="avatar"
+                          src={getImage((v as any).id)}
+                        /> */}
+                      </td>
                     }
                     {Object.keys(v).map((key, index) => {
                       if (props.data!.keys.includes(key)) {
@@ -182,6 +216,17 @@ function DataTable(props: DataTableProps) {
                               <FaPen />
                             </IconButton>
                           </Tooltip>
+                          {props.docs && props.docs.length > 0 ? 
+                            <Tooltip content="Documents">
+                              <IconButton variant="text" onClick={() => {
+                                router.push(`/${props.docs}/certificates/${(v as any).id}`)
+                              }}>
+                                <FaFile/>
+                              </IconButton>
+                            </Tooltip>
+                            :
+                            <></>
+                          }
                           <Tooltip content="Delete">
                             <IconButton variant="text" onClick={() => {
                               setConfirm(!confirm);
@@ -203,6 +248,17 @@ function DataTable(props: DataTableProps) {
                             <FaPen />
                           </IconButton>
                         </Tooltip>
+                        {props.docs && props.docs.length > 0 ? 
+                          <Tooltip content="Documents">
+                            <IconButton variant="text" onClick={() => {
+                              router.push(`/${props.docs}/certificates/${(v as any).id}`)
+                            }}>
+                              <FaFile/>
+                            </IconButton>
+                          </Tooltip>
+                          :
+                          <></>
+                        }
                         <Tooltip content="Delete">
                           <IconButton variant="text" onClick={() => {
                             setConfirm(!confirm);

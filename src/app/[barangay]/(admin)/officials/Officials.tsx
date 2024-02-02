@@ -38,7 +38,7 @@ function Officials(props: OfficialsProps) {
 
   useEffect(() => {
     if (debounced.length > 0) {
-      const filtered = data.filter((v) => {
+      const filtered = OFFICERS.filter((v) => {
         if (v.publicID !== null && v.publicID.toUpperCase().includes(debounced.toUpperCase())) {
           return v;
         }

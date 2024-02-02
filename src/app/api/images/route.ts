@@ -89,24 +89,24 @@ export async function GET (request: NextRequest) {
         const resource = await prisma.images.findFirst({ where: { owner: id, name } });
         const jsDate = new Date();
         const date = dayjs(jsDate).format('MM/DD/YYYYY HH:mm:ss').split(" ");
-        await prisma.logs.create({
-          data: {
-            system: {
-              connect: {
-                id
-              }
-            },
-            type: 200,
-            data: {
-              date: date[0],
-              time: date[1],
-              category: 'Images',
-              message: 'Responds with corresponding resource'
-            }
-          }
-        })
-
+        
         if (resource) {
+          await prisma.logs.create({
+            data: {
+              system: {
+                connect: {
+                  id
+                }
+              },
+              type: 200,
+              data: {
+                date: date[0],
+                time: date[1],
+                category: 'Images',
+                message: 'Responds with corresponding resource'
+              }
+            }
+          })
           return NextResponse.json(resource, { status: 200 });
         }
 

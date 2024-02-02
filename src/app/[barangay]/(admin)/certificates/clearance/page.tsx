@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@material-tailwind/react";
+import { Button, Input, Tooltip } from "@material-tailwind/react";
 import dayjs from "dayjs";
 import { renderAsync } from "docx-preview";
 import Image from "next/image";
@@ -9,10 +9,20 @@ import logo from "../../../../../../public/logo.png";
 import daetLogo from "../../../../../../public/daet-logo.png";
 import footer from "../../../../../../public/footer.png";
 import dahon from "../../../../../../public/dahon.png";
+import { BsFillPrinterFill } from "react-icons/bs";
 
 function Clearance() {
     return (
         <div className="w-full h-fit flex justify-center items-center">
+            <div className="w-auto fixed bottom-10 right-20">
+                <Tooltip content='Print'>
+                <Button className='rounded-full py-6' color="green"
+                    onClick={() => { window.print() }}
+                >
+                    <BsFillPrinterFill size={30} />
+                </Button>
+                </Tooltip>
+            </div>
             <div className="printing-view w-[816px] h-[1056px] bg-white p-10">
                 <div className="w-full h-full border-4 border-blue-900 relative">
                     <div className="w-full flex items-center justify-center gap-6 mt-12">
